@@ -35,6 +35,26 @@ SUPPORTED_STAGES = {
         "title": "Run smORFinder prediction pipeline by genus",
         "import_path": "src.preprocess.genomes.smorf_by_genus.run_smorf_by_genus",
     },
+    "clean_dbamp_targets": {
+        "title": "Clean dbAMP Targets into standardized long-format table",
+        "import_path": "src.preprocess.amp.clean_dbamp_targets.run_clean_targets",
+    },
+    "clean_dbaasp_targets": {
+        "title": "Clean DBAASP Targets into standardized long-format table",
+        "import_path": "src.preprocess.amp.clean_dbaasp_targets.run_clean_targets",
+    },
+    "clean_dramp_targets": {
+        "title": "Clean DRAMP Targets into standardized long-format table",
+        "import_path": "src.preprocess.amp.clean_dramp_targets.run_clean_targets",
+    },
+    "normalize_targets": {
+        "title": "Apply manually curated YAML mapping to dbAMP Targets",
+        "import_path": "src.preprocess.amp.prepare_targets_mapping.run_normalize_targets",
+    },
+    "merge_targets": {
+        "title": "Merge AMP targets across dbAMP, DBAASP, and DRAMP by sequence",
+        "import_path": "src.preprocess.amp.merge_targets.run_merge_targets_by_sequence",
+    },
 }
 
 
@@ -142,7 +162,7 @@ def main():
         help="Path for log file output.",
     )
 
-    # -------------------- Stage-Specific Options --------------------
+    # -------------------- Options: genome download --------------------
     parser.add_argument(
         "--genomes_genus_name",
         type=str,
@@ -151,7 +171,53 @@ def main():
     parser.add_argument(
         "--genomes_output_dir",
         type=str,
-        help="Directory to save genomes and metadata (default: data/genomes/{genus_name}).",
+        help="Output dir for genomes (default: data/genomes/{genus_name}).",
+    )
+
+    # -------------------- Options: dbAMP target cleaning --------------------
+    parser.add_argument(
+        "--targets_input_path",
+        type=str,
+        help="Input dbAMP Excel/CSV (default: data/raw/dbAMP/dbAMP3_pepinfo.xlsx).",
+    )
+    parser.add_argument(
+        "--targets_output_csv",
+        type=str,
+        help="Output cleaned CSV (default: data/processed/dbAMP/targets_clean.csv).",
+    )
+
+    # -------------------- Options: manual YAML mapping --------------------
+    parser.add_argument(
+        "--mapping_input_yaml",
+        type=str,
+        help="Input YAML mapping file (default: data/manual/targets_mapping/targets_mapping.yml).",
+    )
+    parser.add_argument(
+        "--mapping_amp_input_csv",
+        type=str,
+        help="Input cleaned AMP targets CSV (default: data/processed/dbAMP/targets_clean.csv).",
+    )
+
+    # -------------------- Options: merge targets --------------------
+    parser.add_argument(
+        "--merge_dbamp_csv",
+        type=str,
+        help="Input dbAMP targets CSV (default: data/processed/dbAMP/targets_normalized.csv).",
+    )
+    parser.add_argument(
+        "--merge_dbaasp_csv",
+        type=str,
+        help="Input DBAASP targets CSV (default: data/processed/DBAASP/targets_normalized.csv).",
+    )
+    parser.add_argument(
+        "--merge_dramp_csv",
+        type=str,
+        help="Input DRAMP targets CSV (default: data/processed/DRAMP/targets_normalized.csv).",
+    )
+    parser.add_argument(
+        "--merge_output_dir",
+        type=str,
+        help="Output directory for merged results (default: data/processed/merged/).",
     )
 
     args = parser.parse_args()

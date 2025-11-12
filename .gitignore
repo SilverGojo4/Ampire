@@ -48,3 +48,6 @@ data/raw
 
 # Ignore Jupyter Notebook Checkpoints
 notebooks/eda
+
+# Ignore BacDive credentials (local only)
+configs/bacdive.json

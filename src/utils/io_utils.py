@@ -11,6 +11,7 @@ from typing import List, Optional
 
 # ============================== Third-Party Library Imports ==============================
 import pandas as pd
+import yaml
 
 
 # ============================== Custom Functions ==============================
@@ -185,6 +186,33 @@ def load_json_config(file_path: str) -> dict:
         raise ValueError(f"Invalid JSON in config file '{file_path}'") from exc
 
     return config
+
+
+def load_yaml_mapping(file_path: str) -> dict:
+    """
+    Load a YAML file containing manual mappings and return as a dictionary.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the YAML mapping file.
+
+    Returns
+    -------
+    dict
+        Dictionary representing the mappings (key -> value).
+    """
+    # Check file exists
+    if not file_exists(file_path):
+        raise FileNotFoundError(f"YAML file not found: '{file_path}'")
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Invalid YAML format in file '{file_path}'") from exc
+
+    return data
 
 
 def remove_directory_recursively(
