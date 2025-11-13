@@ -63,6 +63,10 @@ SUPPORTED_STAGES = {
         "title": "Run nf-core/ampliseq for 16S microbiome composition analysis",
         "import_path": "src.analysis.hmp2.microbiome_composition.run_microbiome_composition",
     },
+    "query_bacdive_targets": {
+        "title": "Query BacDive for Gram classification of AMP targets",
+        "import_path": "src.preprocess.amp.bacdive_gram_lookup.run_query_bacdive_targets",
+    },
 }
 
 
@@ -306,6 +310,23 @@ def main():
         "--microbiome_max_time",
         type=str,
         help="Max time allocation (e.g., '48.h').",
+    )
+
+    # -------------------- Options: BacDive Gram classification --------------------
+    parser.add_argument(
+        "--bacdive_input_csv",
+        type=str,
+        help="Input CSV containing unique target names (default: data/processed/merged/targets_unique.csv).",
+    )
+    parser.add_argument(
+        "--bacdive_config",
+        type=str,
+        help="Path to BacDive credential config JSON (default: configs/bacdive.json).",
+    )
+    parser.add_argument(
+        "--bacdive_output_csv",
+        type=str,
+        help="Output CSV to save Gram classification results (default: data/processed/merged/targets_bacdive_gram.csv).",
     )
 
     args = parser.parse_args()

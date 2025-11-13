@@ -121,7 +121,7 @@ def extract_hmp2_16s_metadata(
         df_final.to_csv(output_tsv, sep="\t", index=False)
         logger.log_with_borders(
             level=logging.INFO,
-            message=f"TSV saved:\n'{output_tsv}'",
+            message=f"Saved:\n'{output_tsv}'",
             border="|",
             length=120,
         )
