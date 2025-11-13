@@ -55,6 +55,14 @@ SUPPORTED_STAGES = {
         "title": "Merge AMP targets across dbAMP, DBAASP, and DRAMP by sequence",
         "import_path": "src.preprocess.amp.merge_targets.run_merge_targets_by_sequence",
     },
+    "prepare_hmp2_16s_metadata": {
+        "title": "Extract HMP2 16S biopsy metadata for nf-core/ampliseq",
+        "import_path": "src.preprocess.hmp2.prepare_metadata.run_extract_hmp2_16s_metadata",
+    },
+    "microbiome_composition": {
+        "title": "Run nf-core/ampliseq for 16S microbiome composition analysis",
+        "import_path": "src.analysis.hmp2.microbiome_composition.run_microbiome_composition",
+    },
 }
 
 
@@ -218,6 +226,86 @@ def main():
         "--merge_output_dir",
         type=str,
         help="Output directory for merged results (default: data/processed/merged/).",
+    )
+
+    # -------------------- Options: HMP2 16S metadata extraction --------------------
+    parser.add_argument(
+        "--hmp2_metadata_input_csv",
+        type=str,
+        help="Input HMP2 metadata CSV (default: data/raw/HMP2/hmp2_metadata_2018-08-20.csv).",
+    )
+
+    parser.add_argument(
+        "--hmp2_metadata_output_tsv",
+        type=str,
+        help="Output TSV for nf-core/ampliseq (default: data/processed/HMP2/nfcore_metadata.tsv).",
+    )
+
+    # -------------------- Options: Microbiome composition (nf-core/ampliseq) --------------------
+    parser.add_argument(
+        "--microbiome_input_csv",
+        type=str,
+        help="Input sample sheet CSV for nf-core/ampliseq.",
+    )
+
+    parser.add_argument(
+        "--microbiome_metadata",
+        type=str,
+        help="Sample metadata TSV for nf-core/ampliseq.",
+    )
+
+    parser.add_argument(
+        "--microbiome_silva_train",
+        type=str,
+        help="Custom SILVA training set FASTA.",
+    )
+
+    parser.add_argument(
+        "--microbiome_silva_species",
+        type=str,
+        help="Custom SILVA species FASTA.",
+    )
+
+    parser.add_argument(
+        "--microbiome_output_dir",
+        type=str,
+        help="Output directory for nf-core/ampliseq results.",
+    )
+
+    parser.add_argument(
+        "--microbiome_dada2_threads",
+        type=int,
+        help="Threads for DADA2 denoising.",
+    )
+
+    parser.add_argument(
+        "--microbiome_fastp_threads",
+        type=int,
+        help="Threads for fastp preprocessing.",
+    )
+
+    parser.add_argument(
+        "--microbiome_cutadapt_threads",
+        type=int,
+        help="Threads for cutadapt trimming.",
+    )
+
+    parser.add_argument(
+        "--microbiome_max_cpus",
+        type=int,
+        help="Maximum CPU allocation.",
+    )
+
+    parser.add_argument(
+        "--microbiome_max_memory",
+        type=str,
+        help="Max memory allocation (e.g., '64.GB').",
+    )
+
+    parser.add_argument(
+        "--microbiome_max_time",
+        type=str,
+        help="Max time allocation (e.g., '48.h').",
     )
 
     args = parser.parse_args()
