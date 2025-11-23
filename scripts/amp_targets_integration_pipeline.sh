@@ -31,15 +31,15 @@ python "$PROJECT_DIR/src/main.py" \
   --merge_dbamp_csv "$PROJECT_DIR/data/processed/dbAMP/targets_normalized.csv" \
   --merge_dbaasp_csv "$PROJECT_DIR/data/processed/DBAASP/targets_normalized.csv" \
   --merge_dramp_csv "$PROJECT_DIR/data/processed/Dramp/targets_normalized.csv" \
-  --merge_output_dir "$PROJECT_DIR/data/processed/merged/"
+  --merge_output_dir "$PROJECT_DIR/data/processed/AMP/"
 
-# ===================== Step 2: Annotate merged targets with BacDive metadata =====================
-python "$PROJECT_DIR/src/main.py" \
-  --stage query_bacdive_targets \
-  --log_path "$PROJECT_DIR/logs/targets.log" \
-  --bacdive_input_csv "$PROJECT_DIR/data/processed/merged/targets_unique.csv" \
-  --bacdive_config "$PROJECT_DIR/configs/bacdive.json" \
-  --bacdive_output_csv "$PROJECT_DIR/data/processed/merged/targets_bacdive_gram.csv"
+# # ===================== Step 2: Annotate merged targets with BacDive metadata =====================
+# python "$PROJECT_DIR/src/main.py" \
+#   --stage query_bacdive_targets \
+#   --log_path "$PROJECT_DIR/logs/targets.log" \
+#   --bacdive_input_csv "$PROJECT_DIR/data/processed/merged/targets_unique.csv" \
+#   --bacdive_config "$PROJECT_DIR/configs/bacdive.json" \
+#   --bacdive_output_csv "$PROJECT_DIR/data/processed/AMP/targets_bacdive_gram.csv"
 
 # Deactivate the Conda environment
 conda deactivate

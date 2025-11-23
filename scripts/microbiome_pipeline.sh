@@ -43,7 +43,7 @@ python "$PROJECT_DIR/src/main.py" \
   --microbiome_metadata "$PROJECT_DIR/data/processed/HMP2/nfcore_metadata.tsv" \
   --microbiome_silva_train "$PROJECT_DIR/data/external/silva/nr99_v138.1_wSpecies_train_set.fa.gz" \
   --microbiome_silva_species "$PROJECT_DIR/data/external/silva/species_assignment_v138.1.fa.gz" \
-  --microbiome_output_dir "$PROJECT_DIR/experiments/HMP2" \
+  --microbiome_output_dir "$PROJECT_DIR/experiments/HMP2/biopsy_16S" \
   --microbiome_dada2_threads 8 \
   --microbiome_fastp_threads 8 \
   --microbiome_cutadapt_threads 8 \
