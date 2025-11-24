@@ -51,5 +51,20 @@ python "$PROJECT_DIR/src/main.py" \
   --microbiome_max_memory "256.GB" \
   --microbiome_max_time "48.h"
 
+# ===================== Step 3: Extract genus taxonomy =====================
+python "$PROJECT_DIR/src/main.py" \
+  --stage extract_hmp2_genus_taxonomy \
+  --log_path "$LOG_FILE" \
+  --hmp2_rel_abundance_tsv "$PROJECT_DIR/experiments/HMP2/biopsy_16S/qiime2/rel_abundance_tables/rel-table-6.tsv" \
+  --hmp2_genus_output_csv "$PROJECT_DIR/data/processed/HMP2/genus_list.csv"
+
+# ===================== Step 4: Query BacDive for Gram classification of each genus =====================
+python "$PROJECT_DIR/src/main.py" \
+  --stage query_bacdive_genus \
+  --log_path "$LOG_FILE" \
+  --bacdive_input_csv "$PROJECT_DIR/data/processed/HMP2/genus_list.csv" \
+  --bacdive_config "$PROJECT_DIR/configs/bacdive.json" \
+  --bacdive_output_csv "$PROJECT_DIR/data/processed/HMP2/genus_bacdive_gram.csv"
+
 # Deactivate the Conda environment
 conda deactivate

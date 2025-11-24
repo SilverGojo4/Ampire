@@ -22,7 +22,7 @@ if LOGGING_PATH not in sys.path:
 # Submodule imports (external tools integrated into project)
 from setup_logging import CustomLogger
 
-# Local AMPscope utility modules
+# Local Ampire utility modules
 from src.utils.io_utils import directory_exists, file_exists, load_dataframe_by_columns
 from src.utils.log_utils import (
     get_pipeline_completion_message,
@@ -89,7 +89,7 @@ def extract_hmp2_16s_metadata(
             inplace=True,
         )
 
-        # -------------------- Statistics logging --------------------
+        # Statistics logging
         total_samples = df_final.shape[0]
         unique_sites = df_final["sample_index"].nunique()
         counts_by_site = df_final["sample_index"].value_counts().to_dict()

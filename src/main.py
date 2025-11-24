@@ -67,6 +67,14 @@ SUPPORTED_STAGES = {
         "title": "Query BacDive for Gram classification of AMP targets",
         "import_path": "src.preprocess.amp.bacdive_gram_lookup.run_query_bacdive_targets",
     },
+    "extract_hmp2_genus_taxonomy": {
+        "title": "Extract genus-level taxonomy from HMP2 OTU table",
+        "import_path": "src.preprocess.hmp2.extract_taxonomy.run_extract_hmp2_genus_taxonomy",
+    },
+    "query_bacdive_genus": {
+        "title": "Query BacDive for genus-level Gram classification",
+        "import_path": "src.preprocess.hmp2.bacdive_genus_lookup.run_query_bacdive_genus",
+    },
 }
 
 
@@ -327,6 +335,19 @@ def main():
         "--bacdive_output_csv",
         type=str,
         help="Output CSV to save Gram classification results (default: data/processed/merged/targets_bacdive_gram.csv).",
+    )
+
+    # -------------------- Options: HMP2 genus taxonomy extraction --------------------
+    parser.add_argument(
+        "--hmp2_rel_abundance_tsv",
+        type=str,
+        help="Input HMP2 relative abundance TSV (default: data/processed/HMP2/rel_abundance_table.tsv).",
+    )
+
+    parser.add_argument(
+        "--hmp2_genus_output_csv",
+        type=str,
+        help="Output CSV for genus list (default: data/processed/HMP2/genus_list.csv).",
     )
 
     args = parser.parse_args()
