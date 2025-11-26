@@ -346,6 +346,26 @@ def merge_targets_by_sequence(
             bucket["Length"] = len(seq)
             bucket["n_Targets"] = len(bucket["Targets"])
 
+        # Filter sequences by length (5–60 aa)
+        filtered_merged = {
+            seq: bucket for seq, bucket in merged.items() if 5 <= bucket["Length"] <= 60
+        }
+        removed_count = len(merged) - len(filtered_merged)
+        logger.add_divider(level=logging.INFO, length=120, border="+", fill="-")
+        logger.log_with_borders(
+            level=logging.INFO,
+            message=(
+                "[ Length Filter Applied ]\n"
+                f"▸ Allowed length range : '5-60 aa'\n"
+                f"▸ Total sequences before filter : {len(merged)}\n"
+                f"▸ Total sequences after filter  : {len(filtered_merged)}\n"
+                f"▸ Removed (out of range)        : {removed_count}"
+            ),
+            border="|",
+            length=120,
+        )
+        merged = filtered_merged  # type: ignore
+
         # Log statistical summaries
         log_sequence_length_stats(merged, logger)  # type: ignore
         log_target_stats(merged, logger)  # type: ignore
@@ -369,9 +389,9 @@ def merge_targets_by_sequence(
         os.makedirs(output_dir, exist_ok=True)
 
         # Define paths
-        csv_long_path = os.path.join(output_dir, "targets_merged.csv")
-        csv_unique_path = os.path.join(output_dir, "targets_unique.csv")
-        fasta_path = os.path.join(output_dir, "targets_merged.fasta")
+        csv_long_path = os.path.join(output_dir, "amp_raw_metadata.csv")
+        csv_unique_path = os.path.join(output_dir, "targets.csv")
+        fasta_path = os.path.join(output_dir, "amp_raw.fasta")
 
         # Save long-format CSV
         df_out.to_csv(csv_long_path, index=False)
@@ -450,7 +470,7 @@ def run_merge_targets_by_sequence(
         )
         output_dir = kwargs.get(
             "merge_output_dir",
-            os.path.join(base_path, "data/processed/merged/"),
+            os.path.join(base_path, "data/processed/AMP/raw_merged/"),
         )
 
         # Validate input file

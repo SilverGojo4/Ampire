@@ -75,6 +75,10 @@ SUPPORTED_STAGES = {
         "title": "Query BacDive for genus-level Gram classification",
         "import_path": "src.preprocess.hmp2.bacdive_genus_lookup.run_query_bacdive_genus",
     },
+    "cdhit_dedup": {
+        "title": "Run CD-HIT for AMP deduplication",
+        "import_path": "src.preprocess.amp.cdhit_dedup.run_cdhit_dedup",
+    },
 }
 
 
@@ -348,6 +352,48 @@ def main():
         "--hmp2_genus_output_csv",
         type=str,
         help="Output CSV for genus list (default: data/processed/HMP2/genus_list.csv).",
+    )
+
+    # -------------------- Options: CD-HIT --------------------
+    parser.add_argument(
+        "--cdhit_input_fasta",
+        type=str,
+        help="Input FASTA for CD-HIT (default: data/processed/AMP/raw_merged/amp_raw.fasta).",
+    )
+    parser.add_argument(
+        "--cdhit_metadata_csv",
+        type=str,
+        help="Input AMP metadata CSV (default: data/processed/AMP/raw_merged/amp_raw_metadata.csv).",
+    )
+    parser.add_argument(
+        "--cdhit_output_dir",
+        type=str,
+        help="Output directory for CD-HIT results (default: data/processed/AMP/cdhit_nr100).",
+    )
+    parser.add_argument(
+        "--identity",
+        type=float,
+        help="Identity threshold for CD-HIT (default: 1.0).",
+    )
+    parser.add_argument(
+        "--word_size",
+        type=int,
+        help="CD-HIT word size (-n) (default: 5).",
+    )
+    parser.add_argument(
+        "--min_length",
+        type=int,
+        help="Minimum sequence length threshold for CD-HIT (default: 5).",
+    )
+    parser.add_argument(
+        "--threads",
+        type=int,
+        help="Number of threads for CD-HIT.",
+    )
+    parser.add_argument(
+        "--memory_mb",
+        type=int,
+        help="Memory in MB for CD-HIT.",
     )
 
     args = parser.parse_args()

@@ -11,7 +11,7 @@ fi
 
 # Set paths
 PROJECT_DIR=$1
-LOG_FILE="$PROJECT_DIR/logs/targets.log"
+LOG_FILE="$PROJECT_DIR/logs/amp_targets.log"
 
 # Get the base directory of the Conda installation
 CONDA_BASE=$(conda info --base)
@@ -27,19 +27,19 @@ rm -f "$LOG_FILE"
 rm -f "$PROJECT_DIR/data/processed/merged/"
 python "$PROJECT_DIR/src/main.py" \
   --stage merge_targets \
-  --log_path "$PROJECT_DIR/logs/targets.log" \
+  --log_path "$LOG_FILE" \
   --merge_dbamp_csv "$PROJECT_DIR/data/processed/dbAMP/targets_normalized.csv" \
   --merge_dbaasp_csv "$PROJECT_DIR/data/processed/DBAASP/targets_normalized.csv" \
   --merge_dramp_csv "$PROJECT_DIR/data/processed/Dramp/targets_normalized.csv" \
-  --merge_output_dir "$PROJECT_DIR/data/processed/AMP/"
+  --merge_output_dir "$PROJECT_DIR/data/processed/AMP/raw_merged/"
 
-# # ===================== Step 2: Annotate merged targets with BacDive metadata =====================
-# python "$PROJECT_DIR/src/main.py" \
-#   --stage query_bacdive_targets \
-#   --log_path "$PROJECT_DIR/logs/targets.log" \
-#   --bacdive_input_csv "$PROJECT_DIR/data/processed/merged/targets_unique.csv" \
-#   --bacdive_config "$PROJECT_DIR/configs/bacdive.json" \
-#   --bacdive_output_csv "$PROJECT_DIR/data/processed/AMP/targets_bacdive_gram.csv"
+# ===================== Step 2: Annotate merged targets with BacDive metadata =====================
+python "$PROJECT_DIR/src/main.py" \
+  --stage query_bacdive_targets \
+  --log_path "$LOG_FILE" \
+  --bacdive_input_csv "$PROJECT_DIR/data/processed/AMP/raw_merged/targets.csv" \
+  --bacdive_config "$PROJECT_DIR/configs/bacdive.json" \
+  --bacdive_output_csv "$PROJECT_DIR/data/processed/AMP/raw_merged/targets_bacdive_gram.csv"
 
 # Deactivate the Conda environment
 conda deactivate
