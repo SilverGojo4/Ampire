@@ -79,6 +79,10 @@ SUPPORTED_STAGES = {
         "title": "Run CD-HIT for AMP deduplication",
         "import_path": "src.preprocess.amp.cdhit_dedup.run_cdhit_dedup",
     },
+    "smorf_to_amp": {
+        "title": "Run smORF-to-AMP BLAST screening by genus",
+        "import_path": "src.analysis.amp_similarity.smorf_to_amp_blast.run_smorf_to_amp_by_genus",
+    },
 }
 
 
@@ -394,6 +398,31 @@ def main():
         "--memory_mb",
         type=int,
         help="Memory in MB for CD-HIT.",
+    )
+
+    # -------------------- Options: smORF-to-AMP BLAST screening --------------------
+    parser.add_argument(
+        "--blast_reference_db",
+        type=str,
+        help="Path prefix for AMP BLAST+ reference database (default: data/processed/AMP/blast_db/amp_db).",
+    )
+
+    parser.add_argument(
+        "--blast_threads",
+        type=int,
+        help="Threads for BLASTP short-peptide search (default: 8).",
+    )
+
+    parser.add_argument(
+        "--blast_evalue",
+        type=float,
+        help="E-value cutoff for BLASTP (default: 5).",
+    )
+
+    parser.add_argument(
+        "--blast_word_size",
+        type=int,
+        help="Word size for short-peptide BLASTP (default: 2).",
     )
 
     args = parser.parse_args()
