@@ -4,8 +4,8 @@ Blastp Runner Module
 """
 # ============================== Standard Library Imports ==============================
 import os
-import sys
 import subprocess
+import sys
 
 # ============================== Third-Party Library Imports ==============================
 import pandas as pd
@@ -122,5 +122,105 @@ def blastp_smorf_to_amp(
     except Exception:
         logger.exception(
             f"Unexpected error during 'blastp_smorf_to_amp()' for '{query_fasta}'"
+        )
+        raise
+
+
+def blastp_proteome_to_amp(
+    query_fasta: str,
+    reference_db: str,
+    output_csv: str,
+    logger: CustomLogger,
+    threads: int = 8,
+    evalue: float = 1e-3,
+    word_size: int = 3,
+) -> None:
+    """
+    Identify AMP homologs from full-length UniProt proteins.
+    This BLASTP configuration is optimized for typical protein lengths,
+    not short peptides.
+
+    Parameters
+    ----------
+    query_fasta : str
+        Path to protein FASTA (reviewed/unreviewed per TaxID).
+    reference_db : str
+        Path prefix of AMP BLAST database.
+    output_csv : str
+        Path to save parsed BLASTP results.
+    logger : CustomLogger
+        Logger instance for structured logging.
+    threads : int
+        Number of CPU threads.
+    evalue : float
+        E-value cutoff (default=1e-3), more stringent for long proteins.
+    word_size : int
+        BLASTP word size (default=3, suitable for longer proteins).
+
+    Returns
+    -------
+    None
+    """
+    try:
+        # Prepare tmp TSV path
+        output_dir = os.path.dirname(output_csv)
+        os.makedirs(output_dir, exist_ok=True)
+        tmp_tsv = output_csv.replace(".csv", ".tsv")
+
+        # Run BLASTP
+        cmd = [
+            "blastp",
+            "-query",
+            query_fasta,
+            "-db",
+            reference_db,
+            "-out",
+            tmp_tsv,
+            "-num_threads",
+            str(threads),
+            "-evalue",
+            str(evalue),
+            "-word_size",
+            str(word_size),
+            "-matrix",
+            "BLOSUM62",
+            "-seg",
+            "yes",
+            "-comp_based_stats",
+            "2",
+            "-outfmt",
+            "6 qseqid sseqid pident length mismatch gapopen "
+            "qstart qend sstart send evalue bitscore qlen slen",
+        ]
+        subprocess.run(cmd, check=True)
+
+        # Read TSV without header
+        colnames = [
+            "qseqid",
+            "sseqid",
+            "pident",
+            "length",
+            "mismatch",
+            "gapopen",
+            "qstart",
+            "qend",
+            "sstart",
+            "send",
+            "evalue",
+            "bitscore",
+            "qlen",
+            "slen",
+        ]
+        df = pd.read_csv(tmp_tsv, sep="\t", header=None, names=colnames)
+
+        # Save to final CSV
+        df.to_csv(output_csv, index=False)
+
+        # Remove tmp TSV
+        os.remove(tmp_tsv)
+
+    except Exception:
+        logger.exception(
+            f"Unexpected error during 'blastp_proteome_to_amp()' for '{query_fasta}'"
         )
         raise

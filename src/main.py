@@ -87,6 +87,10 @@ SUPPORTED_STAGES = {
         "title": "Download bacterial proteomes from UniProt by genus",
         "import_path": "src.preprocess.proteomes.download_proteomes.run_download_proteomes_by_genus",
     },
+    "proteome_to_amp": {
+        "title": "Run proteome-to-AMP BLAST screening by genus",
+        "import_path": "src.analysis.amp_similarity.proteome_to_amp_blast.run_proteome_to_amp_by_genus",
+    },
 }
 
 
