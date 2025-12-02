@@ -83,6 +83,10 @@ SUPPORTED_STAGES = {
         "title": "Run smORF-to-AMP BLAST screening by genus",
         "import_path": "src.analysis.amp_similarity.smorf_to_amp_blast.run_smorf_to_amp_by_genus",
     },
+    "download_proteomes_by_genus": {
+        "title": "Download bacterial proteomes from UniProt by genus",
+        "import_path": "src.preprocess.proteomes.download_proteomes.run_download_proteomes_by_genus",
+    },
 }
 
 
@@ -423,6 +427,28 @@ def main():
         "--blast_word_size",
         type=int,
         help="Word size for short-peptide BLASTP (default: 2).",
+    )
+
+    # -------------------- Options: proteome download --------------------
+    parser.add_argument(
+        "--proteomes_genus_name",
+        type=str,
+        help="Genus name to query for UniProt proteomes (default: Escherichia).",
+    )
+    parser.add_argument(
+        "--proteomes_output_dir",
+        type=str,
+        help="Output dir for proteomes (default: data/proteomes/{genus_name}).",
+    )
+    parser.add_argument(
+        "--keep_raw",
+        action="store_true",
+        help="Keep all_raw.fasta (default: removed).",
+    )
+    parser.add_argument(
+        "--keep_split",
+        action="store_true",
+        help="Keep reviewed.fasta and unreviewed.fasta (default: removed).",
     )
 
     args = parser.parse_args()
