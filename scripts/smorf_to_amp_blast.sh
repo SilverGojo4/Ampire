@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# -------------------- Check input arguments --------------------
+# Check input arguments
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <PROJECT_DIR> <GENOMES_ROOT>"
   exit 1

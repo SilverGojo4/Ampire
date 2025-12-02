@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# -------------------- Check input arguments --------------------
+# Check input arguments
 if [ $# -lt 1 ]; then
   echo "Usage: $0 <PROJECT_DIR>"
   exit 1
