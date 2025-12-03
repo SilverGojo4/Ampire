@@ -209,7 +209,7 @@ def blast_proteome_single_batch(
             message=(
                 f"[ Proteome BLASTP Screening Summary ]\n"
                 f"▸ Genus            : '{genus_name}'\n"
-                f"▸ Category         : {category}\n"
+                f"▸ Category         : '{category}'\n"
                 f"▸ FASTA count      : {total}\n"
                 f"▸ Reference DB     : '{reference_db}'\n"
                 f"▸ Threads          : {threads}\n"
@@ -271,7 +271,6 @@ def blast_proteome_single_batch(
             level=logging.INFO,
             message=(
                 f"[ Proteome BLASTP Screening Completed ]\n"
-                f"▸ Category          : {category}\n"
                 f"▸ Total FASTA files : {total}\n"
                 f"▸ Successfully done : {success_count}\n"
                 f"▸ Failed            : {len(failed)}\n"

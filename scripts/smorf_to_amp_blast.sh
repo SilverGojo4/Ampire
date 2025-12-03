@@ -16,7 +16,7 @@ MASTER_LOG="$PROJECT_DIR/logs/smorf_to_amp_master.log"
 GENUS_LIST="$PROJECT_DIR/data/processed/HMP2/genus_list.csv"
 BLAST_DB="$PROJECT_DIR/data/external/amp_db/amp_nr100"
 
-# CD-HIT parameter
+# BLAST parameters
 THREADS=8
 EVALUE=5
 WORD_SIZE=2
