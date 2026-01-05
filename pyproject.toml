@@ -1,0 +1,49 @@
+[project]
+name = "ampire"
+version = "0.1.0"
+description = "Genome-centric exploration of antimicrobial peptide presence in bacterial genomes"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+
+authors = [
+  { name = "Your Name", email = "your.email@example.com" }
+]
+
+dependencies = [
+  "biopython>=1.85",
+  "pandas>=2.2",
+  "numpy>=2.3",
+  "pyyaml>=6.0",
+  "tqdm>=4.67",
+  "requests>=2.32",
+  "ete3>=3.1",
+  "rich>=14.0",
+]
+
+[project.optional-dependencies]
+viz = [
+  "matplotlib>=3.10",
+  "seaborn>=0.13",
+  "matplotlib-venn>=1.1",
+  "logomaker>=0.8",
+]
+
+dev = [
+  "pytest>=8.0",
+  "black>=25.0",
+  "isort>=6.0",
+  "pylint>=3.0",
+]
+
+[project.scripts]
+ampire = "app.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
