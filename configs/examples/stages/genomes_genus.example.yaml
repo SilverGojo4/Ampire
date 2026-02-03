@@ -1,0 +1,19 @@
+# Pipeline inputs (what data this pipeline operates on)
+inputs:
+  genus_list_path: configs/inputs/genus.txt
+
+# Algorithm / tool parameters (affect scientific results)
+parameters:
+  assembly_level: complete,chromosome
+  refseq_categories: all
+  source: refseq
+  parallel: 8
+  batch_size: 1000
+
+# Pipeline outputs (where artifacts will be written)
+outputs:
+  root: /path/to/output/genomes
+
+# Execution behavior (does not affect scientific results)
+execution:
+  overwrite: false

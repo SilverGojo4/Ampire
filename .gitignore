@@ -39,3 +39,10 @@ target/
 
 # Ignore VSCode personal settings
 .vscode/
+
+# User-specific pipeline configurations
+configs/inputs/
+configs/stages/
+
+# Runtime artifacts
+data/
