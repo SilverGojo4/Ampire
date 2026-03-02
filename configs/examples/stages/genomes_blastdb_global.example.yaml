@@ -1,0 +1,17 @@
+# Pipeline inputs (what data this pipeline operates on)
+inputs:
+  dataset_root: /path/to/genome_datasets
+  genera_list_path: configs/inputs/genus.txt
+
+# Algorithm / tool parameters (affect scientific results)
+parameters:
+  db_name: ampire_global
+  molecule_type: nucl
+
+# Pipeline outputs (where artifacts will be written)
+outputs:
+  blastdb_root: /path/to/output/blastdb
+
+# Execution behavior (does not affect scientific results)
+execution:
+  overwrite: false

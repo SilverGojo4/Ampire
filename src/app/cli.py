@@ -27,6 +27,7 @@ from app.utils.config_utils import load_yaml
 # Format: "pipeline_name": "module.path:function_name"
 PIPELINES = {
     "genomes.genus": "app.pipelines.genomes.genus:build_genus_genomes_batch_dataset",
+    "genomes.blastdb_global": "app.pipelines.genomes.blastdb_global:build_global_blastdb_pipeline",
     # future:
     # "genomes.species": "app.pipelines.genomes.species:build_species_genomes_dataset",
     # "proteins.genus": "app.pipelines.proteins.genus:build_genus_proteins_dataset",
