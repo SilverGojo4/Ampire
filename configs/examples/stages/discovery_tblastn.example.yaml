@@ -1,0 +1,42 @@
+# Pipeline inputs (what data this pipeline operates on)
+inputs:
+  query_fasta: /path/to/query_sequences.fasta
+  db_name: ampire_global
+  blastdb_root: /path/to/blastdb_root
+
+# Algorithm / tool parameters (affect scientific results)
+parameters:
+  search_series: ampire_global_discovery
+  search_label: example_search
+  batch_size: 50
+
+  # Keep high recall
+  evalue: 1e3
+  word_size: 3
+
+  # Keep low-complexity true signals (LLL/RRR)
+  seg: no
+
+  # Prevent huge DB from returning tons of garbage hits
+  soft_masking: true
+  comp_based_stats: 2
+
+  # Speed / precision tradeoff (discovery stage)
+  use_sw_tback: false
+
+  # Explosion controls
+  max_target_seqs: 200
+  max_hsps: 1
+
+  # Coverage filter
+  qcov_hsp_perc: 60
+
+  num_threads: 32
+
+# Pipeline outputs (where artifacts will be written)
+outputs:
+  discovery_root: /path/to/output/discovery
+
+# Execution behavior (does not affect scientific results)
+execution:
+  overwrite: false
