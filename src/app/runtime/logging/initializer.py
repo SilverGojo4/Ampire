@@ -9,6 +9,7 @@ logging behavior for a single Ampire pipeline execution.
 from __future__ import annotations
 
 # Standard Library Imports
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -99,7 +100,7 @@ def _generate_run_id() -> str:
     str
         Runtime-safe identifier for log file naming.
     """
-    return datetime.now().strftime("%Y%m%d-%H%M%S")
+    return f"{datetime.now().strftime('%Y%m%d-%H%M%S-%f')}-{os.getpid()}"
 
 
 def _normalize_pipeline_name(pipeline_name: str) -> str:

@@ -1,0 +1,18 @@
+# Pipeline inputs (what data this pipeline operates on)
+inputs:
+  genus_list_path: configs/inputs/genus.txt
+
+# Algorithm / tool parameters (affect scientific results)
+parameters:
+  dsn1_cutoff: 0.9999
+  dsn2_cutoff: 0.9999
+  phmm_cutoff: 1e-6
+  smorf_conda_env: <smorf-conda-env>
+
+# Pipeline outputs (where artifacts will be written)
+outputs:
+  dataset_root: /path/to/genome_datasets
+
+# Execution behavior (does not affect scientific results)
+execution:
+  overwrite: true
