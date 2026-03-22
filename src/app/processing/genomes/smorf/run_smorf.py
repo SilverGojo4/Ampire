@@ -18,6 +18,14 @@ import subprocess
 from pathlib import Path
 from typing import List
 
+# App Imports
+from app.processing.genomes.smorf.exceptions import (
+    GFFParsingError,
+    MissingOutputError,
+    SmorfError,
+    SmorfExecutionError,
+)
+
 
 # Public API
 def run_smorf_single_genome(
@@ -60,8 +68,8 @@ def run_smorf_single_genome(
 
     Raises
     ------
-    RuntimeError
-        If the smORFinder executable cannot be executed.
+    SmorfError
+        If smORFinder execution fails or output validation fails.
     """
 
     # Ensure output directory exists
@@ -87,21 +95,21 @@ def run_smorf_single_genome(
         )
 
     except OSError as exc:
-        raise RuntimeError(
-            "Failed to execute smORFinder. "
-            "Ensure the `smorf` executable is available in PATH."
+        raise SmorfExecutionError(
+            "Failed to execute smORFinder (executable not found or not runnable).",
+            cmd=cmd,
+            stderr=str(exc),
         ) from exc
 
     if result.returncode != 0:
-        raise RuntimeError(
-            "smORFinder execution failed\n"
-            f"CMD: {' '.join(cmd)}\n"
-            f"STDERR:\n{result.stderr}"
+        raise _classify_smorf_error(
+            cmd=cmd,
+            stderr=result.stderr,
         )
 
     # Verify expected artifact
     if not _has_expected_output(output_dir):
-        return False
+        raise MissingOutputError(f"Expected output not found in: '{output_dir}'")
 
     return True
 
@@ -191,3 +199,96 @@ def _has_expected_output(output_dir: Path) -> bool:
 
     expected_file = output_dir / "tmp" / "model_predictions.tsv"
     return expected_file.is_file()
+
+
+def _classify_smorf_error(
+    *,
+    cmd: List[str],
+    stderr: str,
+) -> SmorfError:
+    """
+    Classify smORFinder execution errors based on stderr patterns.
+
+    This function inspects the stderr output produced by the external
+    `smorf` command and maps it to structured exception types defined
+    in the smORF processing module.
+
+    The classification is rule-based and relies on known error signatures
+    observed in smORFinder, Prodigal, and associated downstream steps.
+
+    Parameters
+    ----------
+    cmd : list[str]
+        The command used to invoke smORFinder.
+    stderr : str
+        Standard error output captured from the subprocess execution.
+
+    Returns
+    -------
+    SmorfError
+        A structured exception instance representing the classified
+        failure mode.
+
+    Notes
+    -----
+    The classification follows a priority order:
+
+    1. Low-level runtime crashes (e.g., segmentation fault)
+    2. Internal Python exceptions (traceback)
+    3. GFF parsing-related errors
+    4. Prodigal execution failures
+    5. Conda / environment issues
+    6. Fallback to generic execution error
+
+    This function is intentionally conservative: if no known pattern
+    is matched, a generic `SmorfExecutionError` is returned to ensure
+    no failure is silently ignored.
+    """
+
+    stderr = stderr or ""
+    stderr_lower = stderr.lower()
+
+    # 1. Runtime crash (C-level)
+    if "invalid pointer" in stderr_lower or "segmentation fault" in stderr_lower:
+        return SmorfExecutionError(
+            "smORFinder runtime crash detected (C-level failure).",
+            cmd=cmd,
+            stderr=stderr,
+        )
+
+    # 2. Internal Python error
+    if "traceback" in stderr_lower:
+        return SmorfExecutionError(
+            "Internal smORFinder error (Python traceback detected).",
+            cmd=cmd,
+            stderr=stderr,
+        )
+
+    # 3. GFF parsing error
+    if "indexerror" in stderr_lower:
+        return GFFParsingError(
+            "GFF parsing failed (IndexError detected in smORFinder pipeline).",
+        )
+
+    # 4. Prodigal execution failure
+    if "prodigal" in stderr_lower and "error" in stderr_lower:
+        return SmorfExecutionError(
+            "Prodigal execution failed during smORFinder run.",
+            cmd=cmd,
+            stderr=stderr,
+        )
+
+    # 5. Conda / environment issues
+    if "conda" in stderr_lower and "error" in stderr_lower:
+        return SmorfExecutionError(
+            "Conda environment execution failed.",
+            cmd=cmd,
+            stderr=stderr,
+        )
+
+    # Fallback
+    return SmorfExecutionError(
+        "Unknown smORFinder execution error.",
+        cmd=cmd,
+        stderr=stderr,
+    )

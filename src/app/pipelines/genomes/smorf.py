@@ -25,6 +25,7 @@ from typing import Dict, Optional
 # App Imports
 from app.exceptions import PipelineError
 from app.inputs.genus import load_genus_list
+from app.processing.genomes.smorf.exceptions import SmorfError
 from app.processing.genomes.smorf.parser import assemble_smorf_predictions
 from app.processing.genomes.smorf.postprocess import (
     convert_predictions_tsv_to_csv,
@@ -429,18 +430,19 @@ def _build_genus_smorfs_dataset(
         confidence_genome_dir.mkdir(parents=True, exist_ok=True)
 
         # 4.1 Run smORFinder
-        ok = run_smorf_single_genome(
-            fasta_path=fasta_path,
-            output_dir=raw_genome_dir,
-            dsn1_cutoff=dsn1_cutoff,
-            dsn2_cutoff=dsn2_cutoff,
-            phmm_cutoff=phmm_cutoff,
-            smorf_conda_env=smorf_conda_env,
-            overwrite=overwrite,
-        )
+        try:
+            run_smorf_single_genome(
+                fasta_path=fasta_path,
+                output_dir=raw_genome_dir,
+                dsn1_cutoff=dsn1_cutoff,
+                dsn2_cutoff=dsn2_cutoff,
+                phmm_cutoff=phmm_cutoff,
+                smorf_conda_env=smorf_conda_env,
+                overwrite=overwrite,
+            )
 
-        if not ok:
-            failed_genomes.append(genome_id)
+        except SmorfError as exc:
+            failed_genomes.append(f"{genome_id} ({type(exc).__name__})")
             continue
 
         # 4.2 Assemble normalized raw predictions
